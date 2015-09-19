@@ -26,6 +26,7 @@ In R run
 source("run_analysis.R")
 </code>
 The script will download and extract the raw data file (if it doesn't exist in the current directory). The output is generated in <code>"result.txt"</code>, also in the current directory.
+The codebook can be found below.
 
 ## Raw data usage
 The test and train set where used. They can be found in the 
