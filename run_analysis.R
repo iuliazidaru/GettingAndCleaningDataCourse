@@ -1,4 +1,5 @@
 library(stringr)
+library(dplyr)
 ##Prepare data:  download and extract raw dataset
 if(!file.exists("projectdata.zip")){
   fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -19,27 +20,16 @@ trainMeasurements <- "UCI HAR Dataset/train/x_train.txt"
 testSubjectDF <- read.table(testSubjectFile)
 testActivityDF <- read.table(testActivityFile)
 testMeasurementsDF <- read.table(testMeasurements)
-#print("test")
-#print(dim(testSubjectDF))
-#print(dim(testActivityDF))
-#print(dim(testMeasurementsDF))
 
 trainSubjectDF <- read.table(trainSubjectFile)
 trainActivityDF <- read.table(trainActivityFile)
 trainMeasurementsDF <- read.table(trainMeasurements)
-#print("train")
-#print(dim(trainSubjectDF))
-#print(dim(trainActivityDF))
-#print(dim(trainMeasurementsDF))
 
 # Merge datasets
 subjectDF <- rbind(testSubjectDF, trainSubjectDF)
 activityDF <- rbind(testActivityDF, trainActivityDF)
 measurementsDF <- rbind(testMeasurementsDF, trainMeasurementsDF)
-#print("merged size")
-#print(dim(subjectDF))
-#print(dim(activityDF))
-#print(dim(measurementsDF))
+
 
 #Load feature names
 featureNamesFile <- "UCI HAR Dataset/features.txt"
@@ -47,17 +37,14 @@ featureNames <- read.table(featureNamesFile)
 featureNames <-featureNames[,2] #extract only the text
 featureNames <- str_replace(featureNames, "\\(\\)","") #clean the names by removing paranthesis from features
 featureNames <- str_replace(featureNames, ",",".")
-names(measurementsDF) <- featureNames
 
+names(measurementsDF) <- featureNames
 names(subjectDF) <- "subject"
 names(activityDF) <- "activity"
-#print(dim(featureNames))
+
 humanActivityDataSet <- cbind(subjectDF, activityDF, measurementsDF)
-#print("single merged dataset size")
 
 
-
-print(names(humanActivityDataSet))
 #fBodyAcc-bandsEnergy-** duplicate column names
 #remove duplicated columns
 humanActivityDataSet <- humanActivityDataSet[, !duplicated(colnames(humanActivityDataSet))]
@@ -67,9 +54,6 @@ humanActivityDataSet <- humanActivityDataSet[, !duplicated(colnames(humanActivit
 #remove columns which contains "angle"
 meanAndStdDev <- select(humanActivityDataSet, subject, activity, contains("mean"), contains("std")) 
 meanAndStdDev <- select(meanAndStdDev, -contains("angle"))
-#print("meanAndStdDev dataset size")
-print(dim(meanAndStdDev))
-print(summary(meanAndStdDev))
 
 #load activity labels
 activityNamesFile <- "UCI HAR Dataset/activity_labels.txt"
@@ -80,11 +64,13 @@ activityNames <- activityNames[,2]
 #Use descriptive activity names to name the activities in the data set
 
 meanAndStdDev <- mutate(meanAndStdDev, activity = activityNames[meanAndStdDev$activity])
-#print(head(meanAndStdDev))
+
 
 #create a tidy data set with the average of each variable for each activity and each subject.
 averageDS <- meanAndStdDev %>% group_by(subject, activity) %>% summarise_each(funs(mean))
 
-print(head(averageDS))
+print(head(averageDS, 7))
+
+
 #write result in result.txt file
 write.table(averageDS, file = "result.txt", row.names = FALSE)
