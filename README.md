@@ -26,3 +26,44 @@ In R run
 source("run_analysis.R")
 </code>
 The script will download and extract the raw data file (if it doesn't exist in the current directory). The output is generated in <code>"result.txt"</code>, also in the current directory.
+
+## Raw data usage
+The test and train set where used. They can be found in the 
+<code>UCI HAR Dataset/test/</code> and <code>UCI HAR Dataset/train/</code> directories.
+The following files where used:
+
+* <code>UCI HAR Dataset/test/X_test.txt</code>contains the measurements in the test dataset(the 561 features that can be found in <code>UCI HAR Dataset/features.txt</code> file and described in  <code>UCI HAR Dataset/features_info.txt</code> file) 
+* <code>UCI HAR Dataset/test/subject_test.txt </code> contains the subjects for the experiment in the test dataset
+* <code>UCI HAR Dataset/test/y_test.txt</code> contains the activity id for each experiment in the test dataset (the activity id / activity label mapping can be found in <code>UCI HAR Dataset/activity_labels.txt</code> file)
+ </code>
+
+* <code>UCI HAR Dataset/train/X_train.txt</code> contains the measurements in the train dataset(the 561 features that can be found in <code>UCI HAR Dataset/features.txt</code> file and described in  <code>UCI HAR Dataset/features_info.txt</code> file)
+* <code>UCI HAR Dataset/train/subject_train.txt </code> contains the subjects for the experiment in the train dataset
+* <code>UCI HAR Dataset/train/y_train.txt</code> contains the activity id for each experiment in the train dataset (the activity id / activity label mapping can be found in <code>UCI HAR Dataset/activity_labels.txt</code> file)
+ </code>
+
+## Data Processing
+
+The datasets where loaded in memory and merged to obtain a single subject/ activity / features dataset.
+The columns in the features dataset received the names in the features.txt file. The paranthesis ("()") where removed to have better feature names.
+The column name in the subject file was named "subject" and the column in activity file was named "activity".
+
+The columns in the three datasets were put together to obtain a new dataset with subject, activity and all other features columns.
+
+The duplicated columns were removed.
+
+The columns containing "mean" and "std" were selected. The columns containg angle where removed(not necessary).
+
+In the activity column, the activity ids were replaced with the activity names found in activity_labels.txt file.
+
+The data was grouped by subject and activity and the average for each feature was created. So, on each feature column the average per subject and actifity is displayed.
+
+
+## Code book for the resulting dataset
+
+"subject" Subject performing the activity, integer values: 1-30
+"activity" Activity with values: WALKING / WALKING_UPSTAIRS / WALKING_DOWNSTAIRS / SITTING/ STANDING / LAYING
+
+"tBodyAcc-mean-X" "tBodyAcc-mean-Y" "tBodyAcc-mean-Z" "tGravityAcc-mean-X" "tGravityAcc-mean-Y" "tGravityAcc-mean-Z" "tBodyAccJerk-mean-X" "tBodyAccJerk-mean-Y" "tBodyAccJerk-mean-Z" "tBodyGyro-mean-X" "tBodyGyro-mean-Y" "tBodyGyro-mean-Z" "tBodyGyroJerk-mean-X" "tBodyGyroJerk-mean-Y" "tBodyGyroJerk-mean-Z" "tBodyAccMag-mean" "tGravityAccMag-mean" "tBodyAccJerkMag-mean" "tBodyGyroMag-mean" "tBodyGyroJerkMag-mean" "fBodyAcc-mean-X" "fBodyAcc-mean-Y" "fBodyAcc-mean-Z" "fBodyAcc-meanFreq-X" "fBodyAcc-meanFreq-Y" "fBodyAcc-meanFreq-Z" "fBodyAccJerk-mean-X" "fBodyAccJerk-mean-Y" "fBodyAccJerk-mean-Z" "fBodyAccJerk-meanFreq-X" "fBodyAccJerk-meanFreq-Y" "fBodyAccJerk-meanFreq-Z" "fBodyGyro-mean-X" "fBodyGyro-mean-Y" "fBodyGyro-mean-Z" "fBodyGyro-meanFreq-X" "fBodyGyro-meanFreq-Y" "fBodyGyro-meanFreq-Z" "fBodyAccMag-mean" "fBodyAccMag-meanFreq" "fBodyBodyAccJerkMag-mean" "fBodyBodyAccJerkMag-meanFreq" "fBodyBodyGyroMag-mean" "fBodyBodyGyroMag-meanFreq" "fBodyBodyGyroJerkMag-mean" "fBodyBodyGyroJerkMag-meanFreq" "tBodyAcc-std-X" "tBodyAcc-std-Y" "tBodyAcc-std-Z" "tGravityAcc-std-X" "tGravityAcc-std-Y" "tGravityAcc-std-Z" "tBodyAccJerk-std-X" "tBodyAccJerk-std-Y" "tBodyAccJerk-std-Z" "tBodyGyro-std-X" "tBodyGyro-std-Y" "tBodyGyro-std-Z" "tBodyGyroJerk-std-X" "tBodyGyroJerk-std-Y" "tBodyGyroJerk-std-Z" "tBodyAccMag-std" "tGravityAccMag-std" "tBodyAccJerkMag-std" "tBodyGyroMag-std" "tBodyGyroJerkMag-std" "fBodyAcc-std-X" "fBodyAcc-std-Y" "fBodyAcc-std-Z" "fBodyAccJerk-std-X" "fBodyAccJerk-std-Y" "fBodyAccJerk-std-Z" "fBodyGyro-std-X" "fBodyGyro-std-Y" "fBodyGyro-std-Z" "fBodyAccMag-std" "fBodyBodyAccJerkMag-std" "fBodyBodyGyroMag-std" "fBodyBodyGyroJerkMag-std"
+
+The average for each feature with values between -1 and 1.
